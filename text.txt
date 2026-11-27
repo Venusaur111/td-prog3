@@ -1,0 +1,15 @@
+Niveau 1 : une seule table
+1. Les livres de la catégorie Informatique (id_categorie = 3) parus après 2000, du plus ancien au plus récent : 7 lignes. 2. Les adhérents dont l'adresse e-mail commence par la lettre m, quelle que soit la casse : 2 lignes. 3. Les emprunts effectués en octobre 2026, triés par date : 15 lignes.
+
+Niveau 2 : jointures
+4. Pour chaque exemplaire en mauvais état : son code-barres, le titre du livre et sa catégorie : 9 lignes. 5. Les livres d'Albert Camus avec leur catégorie : 3 lignes. 6. L'historique des emprunts de Lova Rasoanaivo (date d'emprunt, titre, date de retour), du plus récent au plus ancien : 21 lignes, dont une sans date de retour. 7. Les filleuls d'Andrianina Rakotomalala : 3 lignes. 8. Les livres qui n'ont jamais été empruntés, par aucun de leurs exemplaires : 1 ligne.
+
+Pour l'exercice 8, il faut deux LEFT JOIN successifs : un livre peut n'avoir aucun exemplaire, et un exemplaire peut n'avoir jamais été emprunté.
+
+Niveau 3 : agrégation
+9. Les auteurs qui ont écrit ou co-écrit au moins deux livres, avec leur nombre de livres : 5 lignes. 10. Les cinq livres les plus empruntés, tous exemplaires confondus : 5 lignes, le premier totalise 17 emprunts. 11. Pour chaque adhérent, le nombre d'emprunts rendus après la date prévue, du plus grand au plus petit : 19 lignes. 12. Le nombre de filleuls de chaque parrain : 4 lignes. 13. La durée moyenne des emprunts rendus, par catégorie, arrondie à une décimale : 5 lignes.
+
+Niveau 4 : synthèse
+14. Les adhérents qui ont actuellement plus d'un emprunt en cours : 5 lignes. 15. Pour chaque catégorie : le nombre de livres, le nombre d'exemplaires et le nombre total d'emprunts : 6 lignes ; la catégorie Roman compte 10 livres, 28 exemplaires et 117 emprunts.
+
+Exercice 15 : si vous obtenez 117 livres pour la catégorie Roman, votre requête compte les lignes produites par les jointures, pas les livres. Cherchez quelle forme de COUNT évite de compter plusieurs fois le même livre.
