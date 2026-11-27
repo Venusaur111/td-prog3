@@ -1,0 +1,112 @@
+1: select * from livre where id_categorie = 3 and annee_parution > 2000 order by annee_parution;
+
+2: select * from adherent where email ilike 'm%';
+
+3: select * from emprunt where date_emprunt between '2026-10-1' and '2026-10-31';
+
+4: bibliotheque=# select distinct ex.code_barre, l.titre, c.libelle
+   from exemplaire ex
+   join livre l on ex.id_livre = l.id_livre
+   join categorie c on c.id_categorie = l.id_categorie
+   where ex.etat ilike 'mauvais';
+5: select l.*, c.libelle
+   from livre l
+   join ecrire e on e.id_livre = l.id_livre
+   join auteur a on a.id_auteur = e.id_auteur
+   join categorie c on c.id_categorie = l.id_categorie
+   where a.prenom ilike 'albert' and a.nom ilike 'camus';
+
+6: select e.date_emprunt, l.titre, e.date_retour
+   from adherent a
+   join emprunt e on e.id_adherent = a.id_adherent
+   join exemplaire ex on ex.id_exemplaire = e.id_exemplaire
+   join livre l on l.id_livre = ex.id_livre
+   where a.nom ilike '%Rasoanaivo%' and a.prenom ilike 'Lova%'
+   order by e.date_emprunt desc;
+
+7: select child
+   from adherent child
+   left join adherent parent on child.id_parrain = parent.id_adherent
+   where parent.nom ilike '%Rakotomalala%' and parent.prenom ilike '%Andrianina%';
+
+8: select l.*
+   from livre l
+   left join exemplaire ex on l.id_livre = ex.id_livre
+   left join emprunt em on em.id_exemplaire = ex.id_exemplaire
+   where ex.id_exemplaire is NULL or em.id_emprunt is NULL;
+
+9:select
+  a.*,
+  count(distinct e.id_livre) as nb_livre
+  from auteur a
+  join ecrire e on e.id_auteur = a.id_auteur
+  group by (a.id_auteur)
+  having count(distinct e.id_livre)>=2;
+
+10:select
+   l.titre
+   , count(em.id_exemplaire) nb_emprunt
+   from livre l
+   join exemplaire ex on ex.id_livre = l.id_livre
+   join emprunt em on em.id_exemplaire = ex.id_exemplaire
+   group by (l.id_livre)
+   order by nb_emprunt desc
+   limit 5;
+
+11:select
+   a.*, count(em.id_adherent) nb_retard
+   from adherent a
+   join emprunt em on a.id_adherent = em.id_adherent
+   where em.date_retour > em.date_retour_prevue
+   group by (a.id_adherent) order by nb_retard;
+
+12: select
+    parrain.id_adherent as id_parrain, parrain.prenom, parrain.nom, count(filleul.id_parrain) nb_filleuls
+    from adherent filleul
+    join adherent parrain
+    on filleul.id_parrain = parrain.id_adherent
+    group by (parrain.id_adherent);
+
+13: select
+    c.id_categorie,
+    c.libelle,
+    round(avg(em.date_retour - em.date_emprunt)::numeric, 1) as duree_moyenne_emprunt
+    from categorie c
+    join livre l
+    on c.id_categorie = l.id_categorie
+    join exemplaire ex
+    on l.id_livre = ex.id_livre
+    join emprunt em
+    on ex.id_exemplaire = em.id_exemplaire
+    where em.date_retour is not NULL
+    group by c.id_categorie;
+
+14:select
+   a.id_adherent,
+   a.nom,
+   count(em.id_emprunt) as active_loan_count
+   from adherent a
+   join emprunt em
+   on a.id_adherent = em.id_adherent
+   where em.date_retour is null
+   group by
+   a.id_adherent,
+   a.nom
+   having count(em.id_emprunt) > 1;
+
+15: select
+    c.id_categorie,
+    c.libelle,
+    count(distinct l.id_livre) as book_count,
+    count(distinct ex.id_exemplaire) as copy_count,
+    count(em.id_emprunt) as total_loan_count
+    from categorie c
+    left join livre l
+    on c.id_categorie = l.id_categorie
+    left join exemplaire ex
+    on l.id_livre = ex.id_livre
+    left join emprunt em
+    on ex.id_exemplaire = em.id_exemplaire
+    group by
+    c.id_categorie,
+    c.libelle;
